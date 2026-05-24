@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>小岗村的故事 · 改革创新谋发展</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Fredoka', 'Comic Neue', 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(160deg, #e8f5e0 0%, #c8e6b5 40%, #d4ecd0 100%);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* 背景装饰 */
+    .bg-decor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 80% 20% 70% 30% / 60% 50% 50% 40%;
+      box-shadow: 0 8px 20px rgba(200, 220, 180, 0.4);
+      backdrop-filter: blur(3px);
+      animation: floatCloud 20s infinite ease-in-out;
+    }
+
+    .cloud1 {
+      width: 100px;
+      height: 45px;
+      top: 5%;
+      left: 2%;
+      background: #f6ffe8;
+    }
+    .cloud2 {
+      width: 130px;
+      height: 55px;
+      bottom: 8%;
+      right: 2%;
+      background: #f0fde0;
+      animation-duration: 24s;
+    }
+    .cloud3 {
+      width: 90px;
+      height: 40px;
+      top: 20%;
+      right: 5%;
+      background: #f2ffe4;
+      animation-duration: 18s;
+    }
+
+    @keyframes floatCloud {
+      0% { transform: translateX(0) translateY(0); }
+      50% { transform: translateX(10px) translateY(-5px); }
+      100% { transform: translateX(0) translateY(0); }
+    }
+
+    .sun {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle at 30% 30%, #fff9c4, #ffe082);
+      border-radius: 50%;
+      box-shadow: 0 0 25px #ffe68f;
+      z-index: 0;
+      animation: gentlePulse 5s infinite;
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    .main-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 650px;
+      background-color: rgba(255, 255, 250, 0.78);
+      backdrop-filter: blur(16px);
+      border-radius: 35px;
+      padding: 16px 12px 20px;
+      box-shadow: 0 20px 40px rgba(80, 110, 50, 0.2), 0 8px 16px rgba(60, 80, 30, 0.15);
+      border: 2px solid rgba(255, 255, 245, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-weight: 700;
+      color: #3a5c28;
+      text-shadow: 2px 2px 0 #f9e79f;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      color: #527a3e;
+      background: #eef7e2;
+      padding: 5px 15px;
+      border-radius: 25px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+      border: 1px dashed #8bb56a;
+    }
+
+    /* 卡片池（目标区域） */
+    .drop-zone-wrapper {
+      width: 100%;
+      position: relative;
+    }
+
+    .drop-zone {
+      width: 100%;
+      min-height: 160px;
+      background: rgba(240, 250, 230, 0.65);
+      border: 2px dashed #b1cf8b;
+      border-radius: 30px;
+      padding: 14px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.3s, border-color 0.3s;
+      background-image: radial-gradient(circle at 12px 12px, #cfe2b6 1px, transparent 1px);
+      background-size: 30px 30px;
+      position: relative;
+    }
+
+    /* 序号与槽位容器 */
+    .slot-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 0 0 auto;
+      width: calc(20% - 8px);
+      max-width: 110px;
+      min-width: 70px;
+    }
+
+    .slot-number {
+      font-weight: bold;
+      color: #5a7d3c;
+      font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+      background: #ffec9e;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .card-slot {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: rgba(255, 255, 245, 0.75);
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(90, 120, 60, 0.2);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #c8dfaa;
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+
+    /* 卡片样式 */
+    .story-card {
+      width: 100%;
+      height: 100%;
+      background: #fefce6;
+      background-image: linear-gradient(150deg, #fffbe6 10%, #f5fad6 90%);
+      border-radius: 14px;
+      box-shadow: 0 6px 12px rgba(80, 110, 30, 0.2), 0 2px 4px rgba(0,0,0,0.08);
+      padding: 8px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 600;
+      color: #3b4f20;
+      border: 2px solid #f7e38b;
+      cursor: grab;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      position: relative;
+      word-break: break-word;
+      font-size: clamp(0.55rem, 1.6vw, 0.75rem);
+      line-height: 1.3;
+      touch-action: none;
+      overflow-y: auto;
+    }
+
+    .story-card:active {
+      cursor: grabbing;
+    }
+
+    .story-card.dragging {
+      opacity: 0.55;
+      transform: scale(0.94);
+      box-shadow: 0 14px 20px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+
+    .card-emoji {
+      font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+      margin-bottom: 3px;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.15));
+      pointer-events: none;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-text {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    /* 卡片库 */
+    .card-pool {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 10px;
+      background: rgba(228, 245, 210, 0.8);
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+      border: 2px solid #bcdb98;
+    }
+
+    .card-pool .story-card {
+      width: clamp(75px, 20vw, 105px);
+      height: clamp(90px, 26vw, 125px);
+      font-size: clamp(0.55rem, 1.8vw, 0.75rem);
+    }
+
+    .card-pool .card-emoji {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+    }
+
+    .reset-btn {
+      background: #fee29b;
+      border: none;
+      color: #2d4118;
+      font-weight: bold;
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      padding: 8px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 5px 0 #d4953b;
+      transition: all 0.1s ease;
+      border: 2px solid #f1bc6b;
+      letter-spacing: 1px;
+      touch-action: manipulation;
+    }
+
+    .reset-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b4752b;
+    }
+
+    .hint-text {
+      color: #5a7642;
+      font-size: clamp(0.65rem, 2.2vw, 0.85rem);
+      background: #f4ffec;
+      padding: 4px 14px;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    /* 手机端优化 */
+    @media (max-width: 480px) {
+      .main-container {
+        padding: 14px 8px 18px;
+        border-radius: 30px;
+        gap: 10px;
+      }
+      
+      .drop-zone {
+        padding: 10px 5px;
+        gap: 4px;
+        border-radius: 24px;
+        min-height: 140px;
+      }
+      
+      .slot-container {
+        width: calc(20% - 6px);
+        min-width: 55px;
+        gap: 3px;
+      }
+      
+      .card-slot {
+        border-radius: 14px;
+      }
+      
+      .story-card {
+        border-radius: 12px;
+        padding: 6px 3px;
+        font-size: 0.5rem;
+        line-height: 1.2;
+      }
+      
+      .card-emoji {
+        font-size: 0.95rem;
+        margin-bottom: 2px;
+      }
+      
+      .slot-number {
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+      }
+      
+      .card-pool .story-card {
+        width: 65px;
+        height: 78px;
+        font-size: 0.5rem;
+      }
+      
+      .card-pool .card-emoji {
+        font-size: 1rem;
+      }
+    }
+
+    /* 更小屏幕 */
+    @media (max-width: 360px) {
+      .drop-zone {
+        padding: 8px 3px;
+        gap: 3px;
+      }
+      
+      .slot-container {
+        width: calc(20% - 5px);
+        min-width: 48px;
+      }
+      
+      .story-card {
+        padding: 4px 2px;
+        font-size: 0.45rem;
+      }
+      
+      .card-emoji {
+        font-size: 0.8rem;
+      }
+      
+      .slot-number {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+      }
+      
+      .card-pool .story-card {
+        width: 55px;
+        height: 68px;
+      }
+    }
+
+    /* 平板 */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .slot-container {
+        max-width: 100px;
+      }
+      
+      .story-card {
+        font-size: clamp(0.6rem, 1.8vw, 0.8rem);
+        padding: 8px 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-decor">
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  <div class="sun"></div>
+</div>
+
+<div class="main-container">
+  <h1>🌾小岗村的故事</h1>
+  <div class="subtitle">
+    <span>🌱</span> 改革创新谋发展 <span>🌱</span>
+  </div>
+
+  <!-- 卡片池：拖放目标区域，只有序号 -->
+  <div class="drop-zone-wrapper">
+    <div class="drop-zone" id="dropZone"></div>
+  </div>
+
+  <div class="hint-text">
+    <span>✨ 拖动下方卡片到上方格子，按你的理解排列顺序 ✨</span>
+  </div>
+
+  <!-- 卡片库 -->
+  <div class="card-pool" id="cardPool"></div>
+
+  <button class="reset-btn" id="resetButton">
+    <span>🔄</span> 重新开始 <span>🌻</span>
+  </button>
+</div>
+
+<script>
+  (function() {
+    // 卡片数据：每张只保留一个表情
+    const storyCards = [
+      { id: 'card1', text: '旧制度束缚积极性，村民穷得揭不开锅', emoji: '😔' },
+      { id: 'card2', text: '18户农民偷偷按下红手印，决心改变', emoji: '🖐️' },
+      { id: 'card3', text: '实行新制度，把田地分给各家各户', emoji: '📜' },
+      { id: 'card4', text: '农民积极性提高，多劳多得', emoji: '💪' },
+      { id: 'card5', text: '粮食获得大丰收', emoji: '🌽' }
+    ];
+
+    let currentPoolCards = [];
+    let dropZoneCards = [];
+
+    const dropZone = document.getElementById('dropZone');
+    const cardPool = document.getElementById('cardPool');
+    const resetBtn = document.getElementById('resetButton');
+
+    // 移动端触摸拖拽状态
+    let touchDragData = {
+      active: false,
+      cardElement: null,
+      cloneElement: null,
+      source: null,
+      cardData: null,
+      sourceIndex: -1,
+      startX: 0,
+      startY: 0,
+      offsetX: 0,
+      offsetY: 0,
+      originalRect: null
+    };
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function resetGame() {
+      currentPoolCards = shuffleArray([...storyCards]);
+      dropZoneCards = [];
+      renderAll();
+    }
+
+    function renderAll() {
+      renderCardPool();
+      renderDropZone();
+    }
+
+    function renderCardPool() {
+      cardPool.innerHTML = '';
+      currentPoolCards.forEach((card, index) => {
+        const cardElement = createCardElement(card, 'pool', index);
+        cardPool.appendChild(cardElement);
+      });
+    }
+
+    function renderDropZone() {
+      dropZone.innerHTML = '';
+      const totalSlots = storyCards.length;
+      
+      for (let i = 0; i < totalSlots; i++) {
+        // 创建序号和槽位容器
+        const slotContainer = document.createElement('div');
+        slotContainer.className = 'slot-container';
+        
+        // 序号
+        const numberDiv = document.createElement('div');
+        numberDiv.className = 'slot-number';
+        numberDiv.textContent = i + 1;
+        slotContainer.appendChild(numberDiv);
+        
+        // 卡槽
+        const slot = document.createElement('div');
+        slot.className = 'card-slot';
+        slot.setAttribute('data-slot-index', i);
+        
+        if (i < dropZoneCards.length && dropZoneCards[i] !== null) {
+          const cardData = dropZoneCards[i];
+          const cardElement = createCardElement(cardData, 'drop', i);
+          slot.appendChild(cardElement);
+        }
+        
+        // 桌面拖放事件
+        slot.addEventListener('dragover', handleDragOver);
+        slot.addEventListener('dragleave', handleDragLeave);
+        slot.addEventListener('drop', handleDrop);
+        
+        slotContainer.appendChild(slot);
+        dropZone.appendChild(slotContainer);
+      }
+    }
+
+    function createCardElement(cardData, source, index) {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'story-card';
+      cardDiv.setAttribute('draggable', 'true');
+      cardDiv.setAttribute('data-card-id', cardData.id);
+      cardDiv.setAttribute('data-source', source);
+      cardDiv.setAttribute('data-index', index);
+      
+      const emojiDiv = document.createElement('div');
+      emojiDiv.className = 'card-emoji';
+      emojiDiv.textContent = cardData.emoji;
+      
+      const textDiv = document.createElement('div');
+      textDiv.className = 'card-text';
+      textDiv.textContent = cardData.text;
+      
+      cardDiv.appendChild(emojiDiv);
+      cardDiv.appendChild(textDiv);
+
+      // 桌面拖拽事件
+      cardDiv.addEventListener('dragstart', handleDragStart);
+      cardDiv.addEventListener('dragend', handleDragEnd);
+
+      // 移动端触摸事件
+      cardDiv.addEventListener('touchstart', handleTouchStart, { passive: false });
+      cardDiv.addEventListener('touchmove', handleTouchMove, { passive: false });
+      cardDiv.addEventListener('touchend', handleTouchEnd);
+      cardDiv.addEventListener('touchcancel', handleTouchCancel);
+
+      return cardDiv;
+    }
+
+    // ========== 桌面拖拽 ==========
+    let desktopDragged = null;
+    let desktopSource = null;
+    let desktopCardData = null;
+    let desktopPoolIndex = -1;
+
+    function handleDragStart(e) {
+      desktopDragged = this;
+      desktopSource = this.getAttribute('data-source');
+      const cardId = this.getAttribute('data-card-id');
+      if (desktopSource === 'pool') {
+        desktopPoolIndex = parseInt(this.getAttribute('data-index'), 10);
+        desktopCardData = currentPoolCards[desktopPoolIndex];
+      } else {
+        const dropIndex = parseInt(this.getAttribute('data-index'), 10);
+        desktopCardData = dropZoneCards[dropIndex];
+        desktopPoolIndex = -1;
+      }
+      e.dataTransfer.setData('text/plain', cardId);
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => {
+        if (desktopDragged) desktopDragged.classList.add('dragging');
+      }, 0);
+    }
+
+    function handleDragEnd(e) {
+      if (desktopDragged) desktopDragged.classList.remove('dragging');
+      document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('drag-over'));
+      desktopDragged = null;
+      desktopSource = null;
+      desktopCardData = null;
+      desktopPoolIndex = -1;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      this.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      if (!desktopCardData || !desktopDragged) return;
+      const slotIndex = parseInt(this.getAttribute('data-slot-index'), 10);
+      moveCardToSlot(desktopSource, desktopCardData, desktopPoolIndex, slotIndex);
+      desktopDragged = null;
+      desktopSource = null;
+      desktopCardData = null;
+      desktopPoolIndex = -1;
+    }
+
+    // ========== 移动端触摸拖拽 ==========
+    function handleTouchStart(e) {
+      e.preventDefault();
+      const card = this;
+      const source = card.getAttribute('data-source');
+      const index = parseInt(card.getAttribute('data-index'), 10);
+      let cardData = null;
+      if (source === 'pool') {
+        cardData = currentPoolCards[index];
+      } else {
+        cardData = dropZoneCards[index];
+      }
+      if (!cardData) return;
+
+      const touch = e.touches[0];
+      const rect = card.getBoundingClientRect();
+
+      // 创建拖拽克隆体
+      const clone = card.cloneNode(true);
+      clone.style.position = 'fixed';
+      clone.style.zIndex = '9999';
+      clone.style.width = rect.width + 'px';
+      clone.style.height = rect.height + 'px';
+      clone.style.left = rect.left + 'px';
+      clone.style.top = rect.top + 'px';
+      clone.style.margin = '0';
+      clone.style.pointerEvents = 'none';
+      clone.style.opacity = '0.85';
+      clone.style.transform = 'scale(1.05)';
+      clone.style.boxShadow = '0 16px 28px rgba(0,0,0,0.3)';
+      document.body.appendChild(clone);
+
+      card.classList.add('dragging');
+
+      touchDragData = {
+        active: true,
+        cardElement: card,
+        cloneElement: clone,
+        source: source,
+        cardData: cardData,
+        sourceIndex: index,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        offsetX: touch.clientX - rect.left,
+        offsetY: touch.clientY - rect.top,
+        originalRect: rect
+      };
+    }
+
+    function handleTouchMove(e) {
+      if (!touchDragData.active) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const clone = touchDragData.cloneElement;
+      if (clone) {
+        clone.style.left = (touch.clientX - touchDragData.offsetX) + 'px';
+        clone.style.top = (touch.clientY - touchDragData.offsetY) + 'px';
+      }
+      highlightSlotUnderTouch(touch.clientX, touch.clientY);
+    }
+
+    function handleTouchEnd(e) {
+      if (!touchDragData.active) return;
+      e.preventDefault();
+      const touch = e.changedTouches[0];
+      const clientX = touch ? touch.clientX : touchDragData.startX;
+      const clientY = touch ? touch.clientY : touchDragData.startY;
+      finishTouchDrag(clientX, clientY);
+    }
+
+    function handleTouchCancel(e) {
+      if (!touchDragData.active) return;
+      finishTouchDrag(touchDragData.startX, touchDragData.startY);
+    }
+
+    function finishTouchDrag(clientX, clientY) {
+      const { cardElement, cloneElement, source, cardData, sourceIndex } = touchDragData;
+      if (cloneElement && cloneElement.parentNode) {
+        cloneElement.parentNode.removeChild(cloneElement);
+      }
+      if (cardElement) {
+        cardElement.classList.remove('dragging');
+      }
+      document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('drag-over'));
+
+      const slot = getSlotUnderPoint(clientX, clientY);
+      if (slot) {
+        const slotIndex = parseInt(slot.getAttribute('data-slot-index'), 10);
+        moveCardToSlot(source, cardData, sourceIndex, slotIndex);
+      }
+      if (!slot && source === 'drop') {
+        const poolRect = cardPool.getBoundingClientRect();
+        if (clientX >= poolRect.left && clientX <= poolRect.right &&
+            clientY >= poolRect.top && clientY <= poolRect.bottom) {
+          dropZoneCards.splice(sourceIndex, 1);
+          currentPoolCards.push(cardData);
+          renderAll();
+        }
+      }
+      touchDragData = {
+        active: false,
+        cardElement: null,
+        cloneElement: null,
+        source: null,
+        cardData: null,
+        sourceIndex: -1,
+        startX: 0, startY: 0,
+        offsetX: 0, offsetY: 0,
+        originalRect: null
+      };
+    }
+
+    function highlightSlotUnderTouch(clientX, clientY) {
+      document.querySelectorAll('.card-slot').forEach(s => s.classList.remove('drag-over'));
+      const slot = getSlotUnderPoint(clientX, clientY);
+      if (slot) slot.classList.add('drag-over');
+    }
+
+    function getSlotUnderPoint(clientX, clientY) {
+      const slots = document.querySelectorAll('.card-slot');
+      for (let slot of slots) {
+        const rect = slot.getBoundingClientRect();
+        if (clientX >= rect.left && clientX <= rect.right &&
+            clientY >= rect.top && clientY <= rect.bottom) {
+          return slot;
+        }
+      }
+      return null;
+    }
+
+    // 通用：将卡片移动到指定槽位（支持跳空放置）
+    function moveCardToSlot(source, cardData, sourceIndex, targetSlotIndex) {
+      while (dropZoneCards.length < targetSlotIndex) {
+        dropZoneCards.push(null);
+      }
+      
+      if (source === 'pool') {
+        if (sourceIndex >= 0 && sourceIndex < currentPoolCards.length) {
+          currentPoolCards.splice(sourceIndex, 1);
+        }
+        
+        if (targetSlotIndex < dropZoneCards.length) {
+          const oldCard = dropZoneCards[targetSlotIndex];
+          if (oldCard !== null && oldCard !== undefined) {
+            currentPoolCards.push(oldCard);
+          }
+          dropZoneCards[targetSlotIndex] = cardData;
+        } else {
+          dropZoneCards.push(cardData);
+        }
+      } else if (source === 'drop') {
+        if (sourceIndex === targetSlotIndex) {
+          renderAll();
+          return;
+        }
+        
+        const movedCard = dropZoneCards.splice(sourceIndex, 1)[0];
+        
+        let adjustedTarget = targetSlotIndex;
+        if (sourceIndex < targetSlotIndex) {
+          adjustedTarget = targetSlotIndex - 1;
+        }
+        
+        if (adjustedTarget <= dropZoneCards.length) {
+          dropZoneCards.splice(adjustedTarget, 0, movedCard);
+        } else {
+          dropZoneCards.push(movedCard);
+        }
+      }
+      
+      while (dropZoneCards.length > 0 && dropZoneCards[dropZoneCards.length - 1] === null) {
+        dropZoneCards.pop();
+      }
+      
+      renderAll();
+    }
+
+    // 卡片池也支持接收（把卡片放回池子）
+    function setupPoolDropForDesktop() {
+      cardPool.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+      cardPool.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!desktopCardData || desktopSource !== 'drop') return;
+        const dropIndex = parseInt(desktopDragged.getAttribute('data-index'), 10);
+        if (dropIndex >= 0 && dropIndex < dropZoneCards.length) {
+          const removed = dropZoneCards.splice(dropIndex, 1)[0];
+          currentPoolCards.push(removed);
+          renderAll();
+        }
+        desktopDragged = null;
+        desktopSource = null;
+        desktopCardData = null;
+      });
+    }
+
+    // 初始化
+    resetGame();
+    setupPoolDropForDesktop();
+
+    resetBtn.addEventListener('click', resetGame);
+
+    window.addEventListener('dragover', (e) => e.preventDefault());
+    window.addEventListener('drop', (e) => e.preventDefault());
+
+    document.addEventListener('touchmove', function(e) {
+      if (touchDragData.active) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+  })();
+</script>
+</body>
+</html>
